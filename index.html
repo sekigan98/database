@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DuendeMagico</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- 🔄 META PIXEL CODE (usá tu propio ID, no el de ejemplo) -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '🔄 TU_PIXEL_ID_AQUI'); 
+  fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=🔄TU_PIXEL_ID_AQUI&ev=PageView&noscript=1"/>
+  </noscript>
+
+  <!-- 🔄 GOOGLE TAG (poné tu propio ID de GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=🔄TU_TAG_ID_AQUI"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '🔄TU_TAG_ID_AQUI');
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
+    html,body{height:100%;}
+    body.noscroll{overflow:hidden;}
+
+    .pantalla{
+      position:relative;width:100%;height:100%;
+      background-image:url('🔄fondo.jpg'); /* CAMBIÁ la imagen por la tuya */
+      background-size:cover;background-position:center;
+      display:flex;justify-content:center;align-items:center;
+    }
+
+    /* Botón estilo tuyo (azul con brillo) */
+    .botonPrincipal{
+      position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);
+      width:280px;height:55px;line-height:50px;text-align:center;
+      font-size:20px;font-weight:900;color:#f0f8ff;white-space:nowrap;
+      background:linear-gradient(135deg,#0077ff,#00c3ff);
+      border:2px solid #aee3ff;border-radius:30px;text-decoration:none;
+      cursor:pointer;transition:all .3s ease;display:inline-flex;
+      align-items:center;justify-content:center;
+      box-shadow:0 0 20px rgba(0,180,255,.6);
+    }
+    .botonPrincipal:hover{
+      background:linear-gradient(135deg,#3399ff,#33ddff);
+      box-shadow:0 0 25px rgba(0,180,255,.9);
+      transform:translate(-50%,-50%) scale(1.05);
+    }
+
+    /* Overlay */
+    .capa{
+      position:fixed;inset:0;background:rgba(0,0,0,.65);
+      display:flex;align-items:center;justify-content:center;
+      visibility:hidden;opacity:0;transition:.25s ease;
+    }
+    .capa.activo{visibility:visible;opacity:1;}
+
+    .ventana{
+      width:min(92vw,360px);padding:18px;border-radius:16px;
+      background:rgba(0,0,0,.85);border:2px solid #aee3ff;
+      box-shadow:0 0 20px rgba(0,180,255,.6);
+      animation:pop .25s ease;
+    }
+    @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+
+    .titulo{color:#e6f7ff;text-align:center;font-weight:900;margin-bottom:10px;}
+    .campo{margin-bottom:12px;}
+    .etiqueta{display:block;color:#e6f7ff;font-weight:700;font-size:13px;margin-bottom:6px;}
+    .entrada{
+      width:100%;height:48px;padding:10px 14px;border-radius:10px;
+      border:1.5px solid #aee3ff;background:rgba(255,255,255,.1);color:#fff;outline:none;
+    }
+    .entrada::placeholder{color:rgba(255,255,255,.6)}
+    .btnEnviar{
+      width:100%;height:55px;font-size:16px;font-weight:900;
+      color:#f0f8ff;background:linear-gradient(135deg,#0077ff,#00c3ff);
+      border:2px solid #aee3ff;border-radius:30px;cursor:pointer;
+      transition:.2s;box-shadow:0 0 20px rgba(0,180,255,.6);
+      text-transform:uppercase;letter-spacing:.3px;
+    }
+    .btnEnviar:hover{transform:scale(1.03)}
+    .btnEnviar:disabled{opacity:.55;cursor:not-allowed;transform:none;filter:grayscale(20%)}
+    .ayuda{font-size:12px;color:#e6f7ff;opacity:.8;text-align:center;margin-top:6px;}
+
+    .acciones{margin-top:10px;display:flex;gap:10px}
+    .cancelar{
+      flex:1;height:44px;border-radius:10px;border:1.5px solid #aee3ff;
+      background:transparent;color:#e6f7ff;font-weight:700;cursor:pointer;
+    }
+
+    .mensaje{
+      display:none;text-align:center;font-weight:700;padding:12px 4px;margin-top:10px;
+      border-radius:8px;
+    }
+    .mensaje.ok{color:#caffbf;background:rgba(0,80,0,.4);}
+    .mensaje.error{color:#ffadad;background:rgba(80,0,0,.4);}
+    .mensaje.mostrar{display:block;}
+  </style>
+</head>
+<body>
+  <div class="pantalla">
+    <button id="btnAbrir" class="botonPrincipal">🎁 Quiero mi regalo</button>
+  </div>
+
+  <div id="capaFormulario" class="capa" role="dialog" aria-modal="true" aria-labelledby="tituloVentana">
+    <div class="ventana" id="ventanaCard">
+      <div class="titulo" id="tituloVentana">Dejanos tus datos y llevate tu beneficio</div>
+
+      <form id="formBono" novalidate>
+        <!-- Honeypot -->
+        <input type="text" name="extra" id="extra" style="display:none" tabindex="-1" autocomplete="off"/>
+
+        <div class="campo">
+          <label class="etiqueta" for="nombre">Nombre / Apodo</label>
+          <input class="entrada" id="nombre" type="text" placeholder="Ej: Ana" required>
+        </div>
+
+        <div class="campo">
+          <label class="etiqueta" for="telefono">Teléfono</label>
+          <input class="entrada" id="telefono" type="tel" inputmode="tel" placeholder="+54 9 11-1234-5678" required>
+        </div>
+
+        <button id="btnConfirmar" class="btnEnviar" type="submit" disabled>Enviar datos</button>
+        <div class="ayuda">El botón se habilita cuando completes ambos campos.</div>
+
+        <div class="acciones">
+          <button type="button" id="btnCancelar" class="cancelar">Cancelar</button>
+        </div>
+
+        <div id="msgOk" class="mensaje ok">✔ ¡Listo! Te vamos a contactar.</div>
+        <div id="msgError" class="mensaje error">⚠ Hubo un error. Probá de nuevo.</div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // 🔄 CAMBIÁ por TU propio Google Form (URL y entradas)
+    const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSck9UwMBxSWvmD7enblThulrnZtP_QLtRJgzkWev9FfxwLAHQ/formResponse";
+    const ENTRY_NOMBRE  = "entry.600341738";
+    const ENTRY_TELEFONO = "entry.889312528";
+
+    const btnAbrir   = document.getElementById('btnAbrir');
+    const capa       = document.getElementById('capaFormulario');
+    const cancelar   = document.getElementById('btnCancelar');
+    const form       = document.getElementById('formBono');
+    const nombre     = document.getElementById('nombre');
+    const telefono   = document.getElementById('telefono');
+    const btnConfirmar = document.getElementById('btnConfirmar');
+    const msgOk      = document.getElementById('msgOk');
+    const msgError   = document.getElementById('msgError');
+    const honeypot   = document.getElementById('extra');
+
+    // Abrir modal
+    btnAbrir.addEventListener('click', () => {
+      capa.classList.add('activo');
+      document.body.classList.add('noscroll');
+      try { fbq('track','InitiateCheckout'); } catch(e){}
+      try { gtag('event','open_modal'); } catch(e){}
+      nombre.focus();
+    });
+
+    // Cerrar modal
+    const cerrar = () => {
+      capa.classList.remove('activo');
+      document.body.classList.remove('noscroll');
+      form.reset();
+      btnConfirmar.disabled = true;
+      msgOk.classList.remove('mostrar');
+      msgError.classList.remove('mostrar');
+    };
+    cancelar.addEventListener('click', cerrar);
+    capa.addEventListener('click', (e)=>{ if(e.target === capa) cerrar(); });
+    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && capa.classList.contains('activo')) cerrar(); });
+
+    // Validación
+    const validarTelefono = (str) => /^\+54 9 [0-9]{2}-[0-9]{4}-[0-9]{4}$/.test(str.trim());
+    const validar = () => {
+      const ok = nombre.value.trim().length > 0 && validarTelefono(telefono.value);
+      btnConfirmar.disabled = !ok;
+      return ok;
+    };
+    nombre.addEventListener('input', validar);
+    telefono.addEventListener('input', validar);
+
+    // Formato automático
+    telefono.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (!v.startsWith("549")) v = "549" + v;
+      let f = "+54 9";
+      if (v.length > 3) f += " " + v.slice(3,5);
+      if (v.length > 5) f += "-" + v.slice(5,9);
+      if (v.length > 9) f += "-" + v.slice(9,13);
+      e.target.value = f;
+      validar();
+    });
+
+    // Enviar formulario
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validar() || honeypot.value) return;
+
+      const data = new FormData();
+      data.append(ENTRY_NOMBRE, nombre.value.trim());
+      data.append(ENTRY_TELEFONO, telefono.value.trim());
+
+      try { fbq('track','Lead'); } catch(_) {}
+      try { gtag('event','lead_submit'); } catch(_) {}
+
+      try {
+        await fetch(FORM_ACTION, { method:'POST', body:data, mode:'no-cors' });
+        msgOk.classList.add('mostrar');
+        setTimeout(cerrar, 2000);
+      } catch (err) {
+        console.error(err);
+        msgError.classList.add('mostrar');
+      }
+    });
+  </script>
+</body>
+</html>
